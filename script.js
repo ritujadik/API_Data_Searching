@@ -1,14 +1,14 @@
-const apiurl = "https://fakestoreapi.com/products";
 const outputdata = document.getElementById("output");
 const searchElem = document.getElementById("Search");
 const buttonElem = document.getElementById("button-logic");
 const addElem = document.getElementById("add");
-const add_productElem = document.getElementById("add-product")
+const add_productElem = document.getElementById("add-product");
+
 
 let products_data = [];
 let filterdata = [];
 
-fetch(apiurl)
+fetch("https://fakestoreapi.com/products")
   .then(Response =>{
     if(!Response.ok){
         throw new Error ("Network response was not ok");    
@@ -81,6 +81,10 @@ function loadWishlist() {
   wishlist.forEach(item => {
     const new_item = document.createElement("li");
     new_item.textContent = item.title;
+    const removeButton = document.createElement("button")
+    removeButton.textContent = "Remove";
+    removeButton.addEventListener("click",()=>remove_product(item.id));
+    new_item.appendChild(removeButton)
     addElem.append(new_item);
   });
 }
@@ -88,4 +92,14 @@ function displaywishlist() {
   addElem.innerHTML = '';
   loadWishlist();
 }
-  
+
+function remove_product (id) {
+  let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+  const updateWishlist = wishlist.filter(item => item.id !== id);
+  localStorage.setItem('wishlist',JSON.stringify(updateWishlist));
+  displaywishlist();
+}
+
+displaywishlist();
+
+
